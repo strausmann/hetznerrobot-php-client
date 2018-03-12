@@ -6,4 +6,4 @@ A PHP Client for the Hetzner Robot
 https://robot.your-server.de/doc/webservice/de.html
 
 # Copyright
-[Hetzner Online GmbH](https://www.hetzner.de) 2018
+[Hetzner Online GmbH](https://www.hetzner.de) © 2013 - 2018
