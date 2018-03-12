@@ -1,0 +1,36 @@
+{
+	"name": "ispserverfarm/hetznerrobot-php-client",
+	"description": "A PHP Client for the Hetzner Robot from Hetzner Online GmbH",
+	"type": "library",
+	"keywords": [
+		"hetzner",
+		"robot",
+		"composer",
+		"api"
+	],
+	"require": {
+		"ext-curl": "*",
+		"php":      "^5.6 || ^7.0 || ^7.1 || ^7.2"
+	},
+	"autoload": {
+		"psr-4": {
+            "ISPServerfarm\\APIClients\\HetznerRobot\\": "src"
+        }
+	},
+	"license": [
+		"Proprietary"
+	],
+	"authors": [
+		{
+			"name":         "Hetzner Online GmbH",
+			"role" :        "Developer",
+			"homepage" :    "https://www.hetzner.de"
+		},
+		{
+			"name":         "Bjoern Strausmann",
+			"email":        "support@isp-serverfarm.de",
+			"role" :        "Package Manager",
+			"homepage" :    "https://www.isp-serverfarm.de"
+		}
+	]
+}
