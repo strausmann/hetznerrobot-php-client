@@ -14,8 +14,8 @@
 	},
 	"autoload": {
 		"psr-4": {
-            "ISPServerfarm\\APIClients\\HetznerRobot\\": "src"
-        }
+			"ISPServerfarm\\APIClients\\HetznerRobot\\": "src"
+		}
 	},
 	"license": [
 		"proprietary"
