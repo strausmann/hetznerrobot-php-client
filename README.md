@@ -1,3 +1,8 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/912e747369dc74647c4d/maintainability)](https://codeclimate.com/github/strausmann/hetznerrobot-php-client/maintainability)
+
+[![Test Coverage](https://api.codeclimate.com/v1/badges/912e747369dc74647c4d/test_coverage)](https://codeclimate.com/github/strausmann/hetznerrobot-php-client/test_coverage)
+
+
 # hetznerrobot-php-client
 A PHP Client for the Hetzner Robot
 
