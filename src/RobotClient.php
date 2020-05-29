@@ -30,19 +30,19 @@ namespace ISPServerfarm\APIClients\HetznerRobot;
  
 class RobotClient extends RobotRestClient
 {
-  const VERSION = '2018.01';
+  const VERSION = '2018.06';
 
   /**
    * Class constructor
    *
-   * @param $url      Robot webservice url
-   * @param $login    Robot login name
-   * @param $password Robot password
-   * @param $verbose
+   * @param string $url      Robot webservice url
+   * @param string $user     Robot webservice username
+   * @param string $password Robot password
+   * @param bool   $verbose
    */
-  public function __construct($url, $login, $password, $verbose = false)
+  public function __construct($url, $user, $password, $verbose = false)
   {
-    parent::__construct($url, $login, $password, $verbose);
+    parent::__construct($url, $user, $password, $verbose);
     $this->setHttpHeader('Accept', 'application/json');
     $this->setHttpHeader('User-Agent', 'HetznerRobotClient/' . self::VERSION);
   }
@@ -88,8 +88,8 @@ class RobotClient extends RobotRestClient
   /**
    * Get failover
    *
-   * @param $ip Failover ip address
-   * @param $query additional query string
+   * @param string $ip Failover ip address
+   * @param array  $query additional query string
    *
    * @return object Failover object
    *
@@ -114,7 +114,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get failover by server ip
    *
-   * @param $serverIp Server main ip address
+   * @param string $serverIp Server main ip address
    *
    * @return object Failover object
    *
@@ -128,8 +128,8 @@ class RobotClient extends RobotRestClient
   /**
    * Route failover
    *
-   * @param $failoverIp Failover ip address
-   * @param $activeServerIp Target server ip address
+   * @param string $failoverIp Failover ip address
+   * @param string $activeServerIp Target server ip address
    *
    * @return object Failover object
    *
@@ -143,9 +143,24 @@ class RobotClient extends RobotRestClient
   }
 
   /**
+   * Delete failover routing
+   *
+   * @param string $failoverIp Failover IP address
+   * @return object Failover object
+   *
+   * @throws RobotClientException
+   */
+  public function failoverDelete($failoverIp)
+  {
+    $url = $this->baseUrl . '/failover/' . $failoverIp;
+
+    return $this->delete($url);
+  }
+
+  /**
    * Get server reset
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Reset object
    *
@@ -165,8 +180,8 @@ class RobotClient extends RobotRestClient
   /**
    * Execute server reset
    *
-   * @param $ip Server main ip
-   * @param $type Reset type
+   * @param string $ip Server main ip
+   * @param string $type Reset type
    *
    * @return object Reset object
    *
@@ -182,7 +197,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get current boot config
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Boot object
    *
@@ -198,7 +213,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get server rescue data
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Rescue object
    *
@@ -214,10 +229,10 @@ class RobotClient extends RobotRestClient
   /**
    * Activate rescue system for a server
    *
-   * @param $ip Server main ip
-   * @param $os Operating system to boot
-   * @param $arch Architecture of operating system
-   * @param $authorized_keys Public SSH keys
+   * @param string $ip Server main ip
+   * @param string $os Operating system to boot
+   * @param string $arch Architecture of operating system
+   * @param array  $authorized_keys Public SSH keys
    *
    * @return object Rescue object
    *
@@ -233,7 +248,7 @@ class RobotClient extends RobotRestClient
   /**
    * Deactivate rescue system for a server
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Rescue object
    *
@@ -249,7 +264,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get data of last rescue system activation
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Rescue object
    *
@@ -265,7 +280,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get linux data
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Linux object
    *
@@ -281,11 +296,11 @@ class RobotClient extends RobotRestClient
   /**
    * Activate linux installation
    *
-   * @param $ip Server main ip
-   * @param $dist Distribution identifier
-   * @param $arch Architecture
-   * @param $lang Language
-   * @param $authorized_keys Public SSH keys
+   * @param string $ip Server main ip
+   * @param string $dist Distribution identifier
+   * @param string $arch Architecture
+   * @param string $lang Language
+   * @param array  $authorized_keys Public SSH keys
    *
    * @return object Linux object
    *
@@ -306,7 +321,7 @@ class RobotClient extends RobotRestClient
   /**
    * Deactivate linux installation
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Linux object
    *
@@ -322,7 +337,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get data of last linux installation activation
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Rescue object
    *
@@ -338,7 +353,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get vnc data
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Vnc object
    *
@@ -354,10 +369,10 @@ class RobotClient extends RobotRestClient
   /**
    * Activate vnc installation
    *
-   * @param $ip Server main ip
-   * @param $dist Distribution identifier
-   * @param $arch Architecture
-   * @param $lang Language
+   * @param string $ip Server main ip
+   * @param string $dist Distribution identifier
+   * @param string $arch Architecture
+   * @param string $lang Language
    *
    * @return object Vnc object
    *
@@ -377,7 +392,7 @@ class RobotClient extends RobotRestClient
   /**
    * Deactivate vnc installation
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Vnc object
    *
@@ -393,7 +408,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get windows data
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Windows object
    *
@@ -409,8 +424,8 @@ class RobotClient extends RobotRestClient
   /**
    * Activate windows installation
    *
-   * @param $ip Server main ip
-   * @param $lang Language
+   * @param string $ip Server main ip
+   * @param string $lang Language
    *
    * @return object Windows object
    *
@@ -426,7 +441,7 @@ class RobotClient extends RobotRestClient
   /**
    * Deactivate windows installation
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Windows object
    *
@@ -442,7 +457,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get cPanel data
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object cPanel object
    *
@@ -458,11 +473,11 @@ class RobotClient extends RobotRestClient
   /**
    * Activate cPanel installation
    *
-   * @param $ip Server main ip
-   * @param $dist Linux distribution
-   * @param $arch Architecture
-   * @param $lang Language
-   * @param $hostname Hostname
+   * @param string $ip Server main ip
+   * @param string $dist Linux distribution
+   * @param string $arch Architecture
+   * @param string $lang Language
+   * @param string $hostname Hostname
    *
    * @return object cPanel object
    *
@@ -483,7 +498,7 @@ class RobotClient extends RobotRestClient
   /**
    * Deactivate cPanel installation
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object cPanel object
    *
@@ -499,7 +514,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get plesk data
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Plesk object
    *
@@ -515,11 +530,11 @@ class RobotClient extends RobotRestClient
   /**
    * Activate plesk installation
    *
-   * @param $ip Server main ip
-   * @param $dist Linux distribution
-   * @param $arch Architecture
-   * @param $lang Language
-   * @param $hostname Hostname
+   * @param string $ip Server main ip
+   * @param string $dist Linux distribution
+   * @param string $arch Architecture
+   * @param string $lang Language
+   * @param string $hostname Hostname
    *
    * @return object Plesk object
    *
@@ -540,7 +555,7 @@ class RobotClient extends RobotRestClient
   /**
    * Deactivate plesk installation
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Plesk object
    *
@@ -556,7 +571,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get Wake On Lan data
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Wol object
    *
@@ -572,7 +587,7 @@ class RobotClient extends RobotRestClient
   /**
    * Send Wake On Lan packet to server
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Wol object
    *
@@ -588,7 +603,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get rdns entry for ip
    *
-   * @param $ip
+   * @param string $ip
    *
    * @return object Rdns object
    *
@@ -604,8 +619,8 @@ class RobotClient extends RobotRestClient
   /**
    * Create rdns entry for ip
    *
-   * @param $ip
-   * @param $ptr
+   * @param string $ip
+   * @param string $ptr
    *
    * @return object Rdns object
    *
@@ -621,8 +636,8 @@ class RobotClient extends RobotRestClient
   /**
    * Update rdns entry for ip
    *
-   * @param $ip
-   * @param $ptr
+   * @param string $ip
+   * @param string $ptr
    *
    * @return object Rdns object
    *
@@ -638,7 +653,7 @@ class RobotClient extends RobotRestClient
   /**
    * Delete rdns entry for ip
    *
-   * @param $ip
+   * @param string $ip
    *
    * @throws RobotClientException
    */
@@ -666,7 +681,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get server by main ip
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Server object
    *
@@ -682,8 +697,8 @@ class RobotClient extends RobotRestClient
   /**
    *  Update servername
    *
-   *  @param $ip Server main ip
-   *  @param $name Servername
+   *  @param string $ip Server main ip
+   *  @param string $name Servername
    *
    *  @return object Server object
    *
@@ -699,7 +714,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get cancellation data of a server
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @return object Cancellation object
    *
@@ -715,9 +730,9 @@ class RobotClient extends RobotRestClient
   /**
    * Cancel a server
    *
-   * @param $ip Server main ip
-   * @param $cancellationDate Date to which the server should be cancelled
-   * @param $cancellationReason Optional cancellation reason
+   * @param string $ip Server main ip
+   * @param string $cancellationDate Date to which the server should be cancelled
+   * @param string $cancellationReason Optional cancellation reason
    *
    * @return object Cancellation object
    *
@@ -738,7 +753,7 @@ class RobotClient extends RobotRestClient
   /**
    * Revoke a server cancellation
    *
-   * @param $ip Server main ip
+   * @param string $ip Server main ip
    *
    * @throws RobotClientException
    */
@@ -766,7 +781,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get all single ips of specific server
    *
-   * @param $serverIp Server main ip
+   * @param string $serverIp Server main ip
    *
    * @return array Array of ip objects
    *
@@ -782,7 +797,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get ip
    *
-   * @param $ip
+   * @param string $ip
    *
    * @return object Ip object
    *
@@ -798,7 +813,7 @@ class RobotClient extends RobotRestClient
   /**
    * Enable traffic warnings for single ip
    *
-   * @param $ip
+   * @param string $ip
    *
    * @return object Ip object
    *
@@ -814,7 +829,7 @@ class RobotClient extends RobotRestClient
   /**
    * Disable traffic warnings for single ip
    *
-   * @param $ip
+   * @param string $ip
    *
    * @return object Ip object
    */
@@ -828,10 +843,10 @@ class RobotClient extends RobotRestClient
   /**
    * Set traffic warning limits for single ip
    *
-   * @param $ip
-   * @param $hourly  Hourly traffic in megabyte
-   * @param $daily   Daily traffic in megabyte
-   * @param $monthly Montly traffic in gigabyte
+   * @param string $ip
+   * @param int    $hourly  Hourly traffic in megabyte
+   * @param int    $daily   Daily traffic in megabyte
+   * @param int    $monthly Montly traffic in gigabyte
    *
    * @return object Ip object
    *
@@ -865,7 +880,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get all subnets of specific server
    *
-   * @param $serverIp Server main ip
+   * @param string $serverIp Server main ip
    *
    * @return array Array of subnet objects
    *
@@ -881,7 +896,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get subnet
    *
-   * @param $ip Net ip
+   * @param string $ip Net ip
    *
    * @return object Subnet object
    *
@@ -897,7 +912,7 @@ class RobotClient extends RobotRestClient
   /**
    * Enable traffic warnings for subnet
    *
-   * @param $ip Net ip
+   * @param string $ip Net ip
    *
    * @return object Subnet object
    *
@@ -913,7 +928,7 @@ class RobotClient extends RobotRestClient
   /**
    * Disable traffic warnings for subnet
    *
-   * @param $ip Net ip
+   * @param string $ip Net ip
    *
    * @return object Subnet object
    *
@@ -929,10 +944,10 @@ class RobotClient extends RobotRestClient
   /**
    * Set traffic warning limits for subnet
    *
-   * @param $ip Net ip
-   * @param $hourly  Hourly traffic in megabyte
-   * @param $daily   Daily traffic in megabyte
-   * @param $monthly Monthly traffic in gigabyte
+   * @param string $ip Net ip
+   * @param int    $hourly  Hourly traffic in megabyte
+   * @param int    $daily   Daily traffic in megabyte
+   * @param int    $monthly Monthly traffic in gigabyte
    *
    * @return object Subnet object
    *
@@ -952,10 +967,10 @@ class RobotClient extends RobotRestClient
   /**
    * Get traffic for single ips
    *
-   * @param $ip   Single ip address or array of ip addresses
-   * @param $type Traffic report type
-   * @param $from Date from
-   * @param $to   Date to
+   * @param string $ip   Single ip address or array of ip addresses
+   * @param string $type Traffic report type
+   * @param string $from Date from
+   * @param string $to   Date to
    *
    * @return object Traffic object
    *
@@ -974,10 +989,10 @@ class RobotClient extends RobotRestClient
   /**
    * Get traffic for subnets
    *
-   * @param $subnet Net ip address of array of ip addresses
-   * @param $type   Traffic report type
-   * @param $from   Date from
-   * @param $to     Date to
+   * @param string $subnet Net ip address of array of ip addresses
+   * @param string $type   Traffic report type
+   * @param string $from   Date from
+   * @param string $to     Date to
    *
    * @return object Traffic object
    *
@@ -996,7 +1011,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get traffic for single ips and subnets
    *
-   * @param $options Array of options
+   * @param array $options Array of options
    *  'ip'     => ip address or array of ip addresses
    *  'subnet' => ip address or array of ip addresses
    *  'type'   => Traffic report type (day, month, year)
@@ -1022,7 +1037,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get separate mac for a single ip
    *
-   * @param $ip
+   * @param string $ip
    *
    * @return object Mac object
    *
@@ -1038,7 +1053,7 @@ class RobotClient extends RobotRestClient
   /**
    * Create separate mac for a single ip
    *
-   * @param $ip
+   * @param string $ip
    *
    * @return object Mac object
    *
@@ -1054,7 +1069,7 @@ class RobotClient extends RobotRestClient
   /**
    * Delete separate mac for a single ip
    *
-   * @param $ip
+   * @param string $ip
    *
    * @return object Mac object
    *
@@ -1070,7 +1085,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get the mac address of a ipv6 subnet
    *
-   * @param $ip
+   * @param string $ip
    *
    * @return object Mac object
    *
@@ -1086,8 +1101,8 @@ class RobotClient extends RobotRestClient
   /**
    * Set the mac address of a ipv6 subnet
    *
-   * @param $ip
-   * @param $mac
+   * @param string $ip
+   * @param string $mac
    *
    * @return object Mac object
    *
@@ -1104,7 +1119,7 @@ class RobotClient extends RobotRestClient
    * Reset the mac address of a ipv6 subnet to the
    * default value (the servers real mac address)
    *
-   * @param $ip
+   * @param string $ip
    *
    * @return object Mac object
    *
@@ -1134,7 +1149,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get a specific ssh public key
    *
-   * @param $fingerprint
+   * @param string $fingerprint
    *
    * @return object The key object
    *
@@ -1150,8 +1165,8 @@ class RobotClient extends RobotRestClient
   /**
    * Save a new ssh public key
    *
-   * @param $name Key name
-   * @param $data Key data in OpenSSH or SSH2 (RFC4716) format
+   * @param string $name Key name
+   * @param string $data Key data in OpenSSH or SSH2 (RFC4716) format
    *
    * @return object The key object
    *
@@ -1170,8 +1185,8 @@ class RobotClient extends RobotRestClient
   /**
    * Update the name of a key
    *
-   * @param $fingerprint The key fingerprint
-   * @param $name The key name
+   * @param string $fingerprint The key fingerprint
+   * @param string $name The key name
    *
    * @return object The key object
    *
@@ -1189,7 +1204,7 @@ class RobotClient extends RobotRestClient
   /**
    * Remove a ssh public key
    *
-   * @param $fingerprint The key fingerprint
+   * @param string $fingerprint The key fingerprint
    *
    * @throws RobotClientException
    */
@@ -1326,7 +1341,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get data of a specifi server market product
    *
-   * @param $productId The product id
+   * @param int $productId The product id
    *
    * @return object The product object
    *
@@ -1356,7 +1371,7 @@ class RobotClient extends RobotRestClient
   /**
    * Query the status of a specific server market order
    *
-   * @param $transactionId
+   * @param int $transactionId
    *
    * @return object The transaction object
    *
@@ -1372,9 +1387,9 @@ class RobotClient extends RobotRestClient
   /**
    * Order a server from the server market
    *
-   * @param $productId
-   * @param $authorizedKeys Array of ssh public key fingerprints
-   * @param $password Root password for server, can only be used when no keys have been supplied
+   * @param int $productId
+   * @param array $authorizedKeys Array of ssh public key fingerprints
+   * @param string $password Root password for server, can only be used when no keys have been supplied
    *
    * @return object The transaction object
    *
@@ -1401,88 +1416,9 @@ class RobotClient extends RobotRestClient
   }
 
   /**
-   * Get all snapshots from a server
-   *
-   * @param $ip
-   *
-   * @return array Array of snapshot objects
-   *
-   * @throws RobotClientException
-   */
-  public function snapshotGet($ip)
-  {
-    $url = $this->baseUrl . '/snapshot/' . $ip;
-    
-    return $this->get($url);
-  }
-
-  /**
-   * Creates a new snapshot from a server
-   *
-   * @param $ip
-   *
-   * @return object The snapshot object
-   *
-   * @throws RobotClientException
-   */
-  public function snapshotCreate($ip)
-  {
-    $url = $this->baseUrl . '/snapshot/' . $ip;
-
-    return $this->post($url);
-  }
-
-  /**
-   * Deletes a snapshot from a server
-   *
-   * @param $ip
-   * @param $id The snapshot id
-   *
-   * @throws RobotClientException
-   */
-  public function snapshotDelete($ip, $id)
-  {
-    $url = $this->baseUrl . '/snapshot/' . $ip . '/' . $id;
-
-    return $this->delete($url);
-  }
-
-  /**
-   * Reverts a snapshot from a server
-   *
-   * @param $ip
-   * @param $id The snapshot id
-   *
-   * @throws RobotClientException
-   */
-  public function snapshotRevert($ip, $id)
-  {
-    $url = $this->baseUrl . '/snapshot/' . $ip . '/' . $id;
-    $data = array('revert' => true);
-
-    return $this->post($url, $data);
-  }
-
-  /**
-   * Update snapshot name
-   *
-   * @param $ip
-   * @param $id The snapshot id
-   * @param $name new name
-   *
-   * @throws RobotClientException
-   */
-  public function snapshotNameUpdate($ip, $id, $name)
-  {
-    $url = $this->baseUrl . '/snapshot/' . $ip . '/' . $id;
-
-    return $this->post($url, array('name' => $name));
-  }
-
-  /**
    * Get all snapshots from a Storage Box
    *
-   * @param $id
+   * @param int $id
    *
    * @return array Array of snapshot objects
    *
@@ -1498,7 +1434,7 @@ class RobotClient extends RobotRestClient
   /**
    * Creates a new snapshot from a Storage Box
    *
-   * @param $id
+   * @param int $id
    *
    * @return object|array The snapshot object
    *
@@ -1514,8 +1450,8 @@ class RobotClient extends RobotRestClient
   /**
    * Deletes a snapshot from a Storage Box
    *
-   * @param $id
-   * @param $name The snapshot name
+   * @param int    $id
+   * @param string $name The snapshot name
    *
    * @throws RobotClientException
    */
@@ -1529,8 +1465,8 @@ class RobotClient extends RobotRestClient
   /**
    * Reverts a snapshot from a Storage Box
    *
-   * @param $id
-   * @param $name The snapshot name
+   * @param int    $id
+   * @param string $name The snapshot name
    *
    * @throws RobotClientException
    */
@@ -1544,9 +1480,9 @@ class RobotClient extends RobotRestClient
   /**
    * Set comment for a snapshot
    *
-   * @param $id
-   * @param $name The snapshot name
-   * @param $comment The snapshot comment
+   * @param int    $id
+   * @param string $name The snapshot name
+   * @param string $comment The snapshot comment
    *
    * @throws RobotClientException
    */
@@ -1561,7 +1497,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get Storage Box by id
    *
-   * @param $id Storagebox id
+   * @param int $id Storagebox id
    *
    * @return object The storagebox object
    *
@@ -1589,27 +1525,10 @@ class RobotClient extends RobotRestClient
   }
 
   /**
-   * Update Storage Box name
-   *
-   * @param $id Storagebox id
-   * @param $name new Name
-   *
-   * @return object storagebox object
-   *
-   * @throws RobotClientException
-   */
-  public function storageboxnameUpdate($id, $name)
-  {
-    $url = $this->baseUrl . '/storagebox/' . $id;
-
-    return $this->post($url, array('storagebox_name' => $name));
-  }
-
-  /**
    * Get directory listing of a StorageBox
    *
-   * @param $id Storagebox id
-   * @param $dir
+   * @param int    $id Storagebox id
+   * @param string $dir
    *
    * @return array Array of directory names
    *
@@ -1628,51 +1547,9 @@ class RobotClient extends RobotRestClient
   }
 
   /**
-   * Starts the vServer
-   *
-   * @param $ip Server main ip
-   *
-   * @throws RobotClientException
-   */
-  public function vServerStart($ip)
-  {
-    $url = $this->baseUrl . '/vserver/' . $ip . '/command';
-
-    return $this->post($url, array('type' => 'start'));
-  }
-
-  /**
-   * Stops the vServer
-   *
-   * @param $ip Server main ip
-   *
-   * @throws RobotClientException
-   */
-  public function vServerStop($ip)
-  {
-    $url = $this->baseUrl . '/vserver/' . $ip . '/command';
-
-    return $this->post($url, array('type' => 'stop'));
-  }
-
-  /**
-   * Shutdown the vServer
-   *
-   * @param $ip Server main ip
-   *
-   * @throws RobotClientException
-   */
-  public function vServerShutdown($ip)
-  {
-    $url = $this->baseUrl . '/vserver/' . $ip . '/command';
-
-    return $this->post($url, array('type' => 'shutdown'));
-  }
-
-  /**
    * Get all snapshot plans for a Storage Box
    *
-   * @param $id
+   * @param int $id
    *
    * @return array Array of snapshot plans objects
    *
@@ -1688,7 +1565,7 @@ class RobotClient extends RobotRestClient
   /**
    * Creates a new snapshot plan for a Storage Box
    *
-   * @param $id
+   * @param int $id
    *
    * @return array Array of snapshot plans objects
    *
@@ -1704,8 +1581,8 @@ class RobotClient extends RobotRestClient
   /**
    * Get firewall of server
    *
-   * @param $ip Server main ip address
-   * @param $port Switch port, only needed when server has multiple ports, e.g. for KVM
+   * @param string $ip Server main ip address
+   * @param string $port Switch port, only needed when server has multiple ports, e.g. for KVM
    *
    * @return object firewall object
    *
@@ -1721,10 +1598,10 @@ class RobotClient extends RobotRestClient
   /**
    * Create new firewall or update existing firewall
    *
-   * @param $ip Server main ip address
-   * @param $status Activate or disable firewall ('active' or 'disabled')
-   * @param $whitelistHos Do allow all Hetzner Online Services by default (e.g. DHCP, DNS, Backup)
-   * @param $inputRules Array of input rules
+   * @param string $ip Server main ip address
+   * @param string $status Activate or disable firewall ('active' or 'disabled')
+   * @param string $whitelistHos Do allow all Hetzner Online Services by default (e.g. DHCP, DNS, Backup)
+   * @param array  $inputRules Array of input rules
    *        array(
    *          'input' => array(
    *            array(
@@ -1740,7 +1617,7 @@ class RobotClient extends RobotRestClient
    *            )
    *          )
    *        )
-   * @param $port Switch port, only needed when server has multiple ports, e.g. for KVM
+   * @param string $port Switch port, only needed when server has multiple ports, e.g. for KVM
    *
    * @return object firewall object
    *
@@ -1760,9 +1637,9 @@ class RobotClient extends RobotRestClient
   /**
    * Craete new firewall or update existing firewall from template
    *
-   * @param $ip Server main IP address
-   * @param $templateId Firewall template ID
-   * @param $port Switch port, only needed when server has multiple ports, e.g. for KVM
+   * @param string $ip Server main IP address
+   * @param int    $templateId Firewall template ID
+   * @param string $port Switch port, only needed when server has multiple ports, e.g. for KVM
    *
    * @return object firewall object
    *
@@ -1780,8 +1657,8 @@ class RobotClient extends RobotRestClient
   /**
    * Delete firewall
    *
-   * @param $ip Server main IP address
-   * @param $port Switch port, only needed when server has multiple ports, e.g. for KVM
+   * @param string $ip Server main IP address
+   * @param string $port Switch port, only needed when server has multiple ports, e.g. for KVM
    *
    * @throws RobotClientException
    */
@@ -1809,10 +1686,10 @@ class RobotClient extends RobotRestClient
   /**
    * Create a new firewall template
    *
-   * @param $name Name of template
-   * @param $whitelistHos Whitelist Hetzner services
-   * @param $isDefault Use this template as default
-   * @param $rules Array of rules
+   * @param string $name Name of template
+   * @param string $whitelistHos Whitelist Hetzner services
+   * @param string $isDefault Use this template as default
+   * @param array  $rules Array of rules
    *        array(
    *          'input' => array(
    *            array(
@@ -1848,7 +1725,7 @@ class RobotClient extends RobotRestClient
   /**
    * Get a specific firewall template by ID
    *
-   * @param $templateID Firewall template id
+   * @param int $templateID Firewall template id
    *
    * @return firewall template object
    *
@@ -1864,11 +1741,11 @@ class RobotClient extends RobotRestClient
   /**
    * Update a existing firewall template
    *
-   * @param $templateId Firewall template ID
-   * @param $name Name of template
-   * @param $whitelistHos Whitelist Hetzner services
-   * @param $isDefault Use this template as default
-   * @param $rules Array of input rules
+   * @param int    $templateId Firewall template ID
+   * @param string $name Name of template
+   * @param string $whitelistHos Whitelist Hetzner services
+   * @param string $isDefault Use this template as default
+   * @param array  $rules Array of input rules
    *        array(
    *          'input' => array(
    *            array(
@@ -1904,8 +1781,8 @@ class RobotClient extends RobotRestClient
   /**
    * Update a existing firewall template name
    *
-   * @param $templateId Firewall template ID
-   * @param $name Name of template
+   * @param int    $templateId Firewall template ID
+   * @param string $name Name of template
    *
    * @return firewall template object
    *
@@ -1923,7 +1800,7 @@ class RobotClient extends RobotRestClient
   /**
    * Delete a firewall template
    *
-   * @param $templateId Firewall template ID
+   * @param int $templateId Firewall template ID
    *
    * @throws RobotClientException
    */
@@ -1933,12 +1810,12 @@ class RobotClient extends RobotRestClient
 
     return $this->delete($url);
   }
-  
-  
+
+
   /**
    * Get all sub accounts for a Storage Box
    *
-   * @param $id
+   * @param int $id
    *
    * @return array Array of sub accounts objects
    *
@@ -1954,8 +1831,8 @@ class RobotClient extends RobotRestClient
   /**
    * Creates a new sub account for a Storage Box
    *
-   * @param $id
-   * @param $data
+   * @param int   $id
+   * @param array $data
    *
    * @return array Array of sub account object
    *
@@ -1971,9 +1848,9 @@ class RobotClient extends RobotRestClient
   /**
    * Updates a new sub account for a Storage Box
    *
-   * @param $id
-   * @param $username
-   * @param $data
+   * @param int    $id
+   * @param string $username
+   * @param array  $data
    *
    * @throws RobotClientException
    */
@@ -1983,11 +1860,28 @@ class RobotClient extends RobotRestClient
 
     return $this->put($url, $data);
   }
+
+  /**
+   * Updates a Storage Box
+   *
+   * @param int   $id
+   * @param array $data
+   *
+   * @return array Response
+
+   */
+  public function storageboxUpdate($id, $data)
+  {
+    $url = $this->baseUrl . '/storagebox/' . $id;
+
+    return $this->post($url, $data);
+  }
+
   /**
    * Resets the password of a sub account
    *
-   * @param $id
-   * @param $username
+   * @param int    $id
+   * @param string $username
    *
    * @return string password
    *
@@ -2003,8 +1897,8 @@ class RobotClient extends RobotRestClient
   /**
    * Deletes a sub account for a Storage Box
    *
-   * @param $id
-   * @param $username
+   * @param int    $id
+   * @param string $username
    *
    * @throws RobotClientException
    */
@@ -2013,5 +1907,114 @@ class RobotClient extends RobotRestClient
     $url = $this->baseUrl . '/storagebox/' . $id . '/subaccount/' . $username;
 
     return $this->delete($url);
+  }
+
+  /**
+   * Create a new vSwitch
+   *
+   * @param int    $vlan VLAN id
+   * @param string $name vSwitch name
+   *
+   * @return object vSwitch object
+   *
+   * @throws RobotClientException
+   */
+  public function vswitchCreate($vlan, $name = null)
+  {
+    $url = $this->baseUrl . '/vswitch';
+    $data = array(
+      'vlan' => $vlan
+    );
+    if ($name)
+    {
+      $data['name'] = $name;
+    }
+
+    return $this->post($url, $data);
+  }
+
+  /**
+   * Update the name of a vSwitch
+   *
+   * @param int    $vswitchId
+   * @param string $name
+   *
+   * @throws RobotClientException
+   */
+  public function vswitchUpdateName($vswitchId, $name)
+  {
+    $url = $this->baseUrl . '/vswitch/' . $vswitchId;
+
+    return $this->post($url, array(
+      'name' => $name,
+    ));
+  }
+
+  /**
+   * Change the VLAN id of a vSwitch
+   *
+   * @param int    $vswitchId
+   * @param string $vlan
+   *
+   * @throws RobotClientException
+   */
+  public function vswitchChangeVlan($vswitchId, $vlan)
+  {
+    $url = $this->baseUrl . '/vswitch/' . $vswitchId;
+
+    return $this->post($url, array(
+      'vlan' => $vlan,
+    ));
+  }
+
+  /**
+   * Cancel a vSwitch
+   *
+   * @param int    $vswitchId
+   * @param string $cancellationDate
+   *
+   * @throws RobotClientException
+   */
+  public function vswitchCancel($vswitchId, $cancellationDate)
+  {
+    $url = $this->baseUrl . '/vswitch/' . $vswitchId;
+
+    return $this->delete($url, array(
+      'cancellation_date' => $cancellationDate,
+    ));
+  }
+
+  /**
+   * Add servers to a vSwitch
+   *
+   * @param int   $vswitchId
+   * @param array $servers Array of server numbers or main IPs
+   *
+   * @throws RobotClientException
+   */
+  public function vswitchAddServers($vswitchId, array $servers)
+  {
+    $url = $this->baseUrl . '/vswitch/' . $vswitchId . '/server';
+
+    return $this->post($url, array(
+      'server' => $servers,
+    ));
+  }
+
+  /**
+   * Remove servers from a vSwitch
+   *
+   * @param int   $vswitchId
+   * @param array $servers Array of server numbers or main IPs
+   *
+   * @throws RobotClientException
+   */
+  public function vswitchRemoveServers($vswitchId, array $servers)
+  {
+    $url = $this->baseUrl . '/vswitch/' . $vswitchId . '/server';
+
+    return $this->delete($url, array(
+      'server' => $servers,
+    ));
   }
 }

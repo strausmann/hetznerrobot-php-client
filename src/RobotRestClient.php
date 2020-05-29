@@ -3,7 +3,7 @@
 /**
  * Basic REST client
  * 
- * Copyright (c) 2013-2018 Hetzner Online GmbH
+ * Copyright (c) 2013-2016 Hetzner Online GmbH
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,16 +37,16 @@ class RobotRestClient
    * Class constructor
    * 
    * @param $url      Robot webservice url
-   * @param $login    Robot login name
+   * @param $user     Robot webservice username
    * @param $password Robot password
    * @param $verbose
    */ 
-  public function __construct($url, $login, $password, $verbose = false)
+  public function __construct($url, $user, $password, $verbose = false)
   {
     $this->baseUrl = rtrim($url, '/');
     $this->curl = curl_init();
     $this->setCurlOption(CURLOPT_RETURNTRANSFER, true);
-    $this->setCurlOption(CURLOPT_USERPWD, $login . ':' . $password);
+    $this->setCurlOption(CURLOPT_USERPWD, $user . ':' . $password);
     $this->setCurlOption(CURLOPT_VERBOSE, $verbose);
   }
 
@@ -153,14 +153,19 @@ class RobotRestClient
    * Do a DELETE request
    *
    * @param $url
+   * @param $data
    * @return array Array with keys 'response_code' and 'response'
    *   On error 'response' is false
    */
-  protected function delete($url)
+  protected function delete($url, array $data = array())
   {
     $this->setCurlOption(CURLOPT_URL, $url);
     $this->setCurlOption(CURLOPT_HTTPGET, true);
     $this->setCurlOption(CURLOPT_CUSTOMREQUEST, 'DELETE');
+    if ($data)
+    {
+      $this->setCurlOption(CURLOPT_POSTFIELDS, http_build_query($data));
+    }
 
     return $this->executeRequest();
   }
