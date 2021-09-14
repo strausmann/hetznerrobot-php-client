@@ -25,7 +25,7 @@
  */
 
 namespace ISPServerfarm\APIClients\HetznerRobot;
- 
+
 class RobotRestClient
 {
   private $curl;
@@ -40,7 +40,7 @@ class RobotRestClient
    * @param $user     Robot webservice username
    * @param $password Robot password
    * @param $verbose
-   */ 
+   */
   public function __construct($url, $user, $password, $verbose = false)
   {
     $this->baseUrl = rtrim($url, '/');
@@ -79,7 +79,7 @@ class RobotRestClient
   {
     return isset($this->curlOptions[$option]) ? $this->curlOptions[$option] : null;
   }
- 
+
   /**
    * Set a HTTP header
    * 
@@ -90,7 +90,7 @@ class RobotRestClient
   {
     $this->httpHeader[$name] = $name . ': ' . $value;
   }
-    
+
   /**
    * Do a GET request
    * 
@@ -120,8 +120,7 @@ class RobotRestClient
     $this->setCurlOption(CURLOPT_URL, $url);
     $this->setCurlOption(CURLOPT_POST, true);
     $this->setCurlOption(CURLOPT_CUSTOMREQUEST, 'POST');
-    if ($data)
-    {
+    if ($data) {
       $this->setCurlOption(CURLOPT_POSTFIELDS, http_build_query($data));
     }
 
@@ -141,8 +140,7 @@ class RobotRestClient
     $this->setCurlOption(CURLOPT_URL, $url);
     $this->setCurlOption(CURLOPT_HTTPGET, true);
     $this->setCurlOption(CURLOPT_CUSTOMREQUEST, 'PUT');
-    if ($data)
-    {
+    if ($data) {
       $this->setCurlOption(CURLOPT_POSTFIELDS, http_build_query($data));
     }
 
@@ -162,14 +160,13 @@ class RobotRestClient
     $this->setCurlOption(CURLOPT_URL, $url);
     $this->setCurlOption(CURLOPT_HTTPGET, true);
     $this->setCurlOption(CURLOPT_CUSTOMREQUEST, 'DELETE');
-    if ($data)
-    {
+    if ($data) {
       $this->setCurlOption(CURLOPT_POSTFIELDS, http_build_query($data));
     }
 
     return $this->executeRequest();
   }
-  
+
   /**
    * Execute HTTP request
    * 

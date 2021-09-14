@@ -1,1 +1,6 @@
+.php_cs.cache
+.php-cs-fixer.cache
+vendor
+composer.lock
+README.md.*
 credentials.php
